@@ -1,0 +1,67 @@
+﻿
+@{
+    ViewBag.Title = "Upload";
+}
+
+
+<script>
+    function UploadFile() {
+        var currentFile = $("#myFileAjax")[0].files[0];
+        var file = currentFile;
+        var formData = new FormData();
+        formData.append("MyFile", file)
+        //var xhr = new XMLHttpRequest();
+
+        ////xhr.onload = function () {
+        ////    alert(xhr.responseText);
+
+        ////}
+
+        //xhr.onreadystatechange = function () {
+        //    if (xhr.readyState == 4 && xhr.status == 200) {
+        //        alert(xhr.responseText);
+        //    }
+        //}
+
+        //xhr.open("post", "/Uploads/AjaxSaveAs", true)
+        //xhr.send(formData);
+        //document.getElementById("divMsg").innerHTML = "good";
+        $.ajax({
+            type: "POST",//方法类型
+            dataType: "text",//预期服务器返回的数据类型
+            url: "/Uploads/AjaxSaveAs",//url
+            processData: false,
+            contentType: false,
+            data: formData,
+            success: function (result) {
+                console.log(result);//打印服务端返回的数据(调试用)
+                if (result.resultCode == 200) {
+                    alert("SUCCESS");
+                }
+            },
+            error : function() {
+                alert("异常！");
+            }
+        });
+    }
+
+
+</script>
+
+
+@*利用ajax进行文件上传*@
+<div>
+    <input type="file" name="myFileAjax" id="myFileAjax" />
+    <input type="button" onclick="UploadFile();" value="UploadAjax" />
+</div>
+<div id="divMsg"></div>
+
+
+
+@*利用基本的form提交，进行文件上传*@
+<form action="/Uploads/SaveAs" method="post" enctype="multipart/form-data">
+    <div>
+        <input type="file" id="MyFile" name="MyFile" />
+        <input type="submit" value="Upload" />
+    </div>
+</form>
